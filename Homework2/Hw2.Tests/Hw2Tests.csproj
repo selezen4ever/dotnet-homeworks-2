@@ -22,8 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\HomeWork1\Hw1\Hw1.csproj" />
-      <ProjectReference Include="..\Hw2\Hw2.ilproj" />
+      <ProjectReference Include="..\Hw2\Hw2.ilproj"/>
     </ItemGroup>
 
 </Project>
