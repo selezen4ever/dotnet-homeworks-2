@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hw2\Hw2.ilproj" />
+      <ProjectReference Include="..\Hw2\Hw2.ilproj"/>
     </ItemGroup>
 
 </Project>
