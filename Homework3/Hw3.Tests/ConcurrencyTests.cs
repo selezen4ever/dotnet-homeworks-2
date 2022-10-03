@@ -63,7 +63,7 @@ public class ConcurrencyTests
         _toh.WriteLine($"Expected: {expected}; Actual: {Concurrency.Index}");
     }
 
-    [Fact]
+    [Fact(Skip = "может воспроизвестись, а может не воспроизвестись:)")]
     public void EightThreads_100KIterations_InterlockedIsFasterThanLock_Or_IsIt()
     {
         var isM1Mac = OperatingSystem.IsMacOS() &&
