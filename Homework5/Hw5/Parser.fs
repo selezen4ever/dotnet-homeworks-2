@@ -21,7 +21,7 @@ let inline isOperationSupported (arg1, operation, arg2): Result<('a * Calculator
     
 let parseArgs (args: string[]): Result<('a * string * 'b), Message> =
      try
-         Ok(args[0] |> double, args[1], args[2] |> double)
+         Ok(args[0] |> decimal, args[1], args[2] |> decimal)
          with
             | _ -> Error WrongArgFormat
         
@@ -29,7 +29,7 @@ let parseArgs (args: string[]): Result<('a * string * 'b), Message> =
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 let inline isDividingByZero (arg1, operation, arg2): Result<('a * CalculatorOperation * 'b), Message> =
     match (operation, arg2) with
-    | (CalculatorOperation.Divide, 0.0) -> Error DivideByZero
+    | (CalculatorOperation.Divide, 0.0m) -> Error DivideByZero
     | _ -> Ok(arg1, operation, arg2)
     
 let parseCalcArguments (args: string[]): Result<'a, 'b> =
