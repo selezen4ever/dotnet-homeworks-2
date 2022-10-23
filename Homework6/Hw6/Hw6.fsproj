@@ -17,7 +17,6 @@
         <Compile Include="Calculator.fs" />
         <Compile Include="MathExpression.fs" />
         <Compile Include="MaybeBuilder.fs" />
-        <Compile Include="Parser.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

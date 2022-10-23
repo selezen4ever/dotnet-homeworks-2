@@ -15,7 +15,7 @@ let calculatorHandler: HttpHandler =
     fun next ctx ->
         let result = maybe {
                 let! expression = ctx.TryBindQueryString<MathExpression>(CultureInfo.InvariantCulture)
-                let! parsedOperator =  expression.operation |> Parser.parseOperation
+                let! parsedOperator =  expression.operation |> parseOperation
                 return calculate expression.value1 parsedOperator expression.value2
             }
         match result with
