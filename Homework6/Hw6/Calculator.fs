@@ -18,7 +18,7 @@ let OpMultiply = "Multiply"
 [<Literal>] 
 let OpDivide = "Divide"
 
-let inline parseOperation operation =
+let parseOperation operation =
     match operation with
     | OpPlus -> Ok(CalculatorOperation.Plus)
     | OpMinus -> Ok(CalculatorOperation.Minus)
@@ -27,7 +27,7 @@ let inline parseOperation operation =
     | _ ->  Error $"Could not parse value '{operation}'"
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
-let inline calculate value1 operation value2  =
+let inline calculate (value1: ^a) operation (value2: ^a)  =
     match operation with
     | CalculatorOperation.Plus -> Ok(value1 + value2)
     | CalculatorOperation.Minus -> Ok(value1 - value2)
