@@ -8,11 +8,24 @@ namespace Hw8.Controllers;
 public class CalculatorController : Controller
 {
     public ActionResult<double> Calculate([FromServices] ICalculator calculator,
-        string val1,
-        string operation,
-        string val2)
+        [FromQuery] string? val1,
+        [FromQuery] string? operation,
+        [FromQuery] string? val2)
     {
-        throw new NotImplementedException();
+        if (!double.TryParse(val1, NumberStyles.Float, CultureInfo.InvariantCulture, out var value1) 
+            || !double.TryParse(val2, NumberStyles.Float, CultureInfo.InvariantCulture, out var value2))
+            return BadRequest(Messages.InvalidNumberMessage);
+        if (value2 == 0 && operation == "Divide")
+            return BadRequest(Messages.DivisionByZeroMessage);
+        
+        return operation switch
+        {
+            "Plus" => Ok(calculator.Plus(value1, value2)),
+            "Minus" => Ok(calculator.Minus(value1, value2)),
+            "Multiply" => Ok(calculator.Multiply(value1, value2)),
+            "Divide" => Ok(calculator.Divide(value1, value2)),
+            _ => BadRequest(Messages.InvalidOperationMessage)
+        };
     }
     
     [ExcludeFromCodeCoverage]
