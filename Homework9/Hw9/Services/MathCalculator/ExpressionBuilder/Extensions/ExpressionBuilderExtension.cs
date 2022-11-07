@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace Hw9.Services.MathCalculator.ExpressionBuilder.Extensions;
 
@@ -11,7 +12,8 @@ public static class ExpressionBuilderExtension
         Multiply,
         Divide,
     }
-
+    
+    [ExcludeFromCodeCoverage]
     public static ExpressionType TryParse(string str)
     {
         return str switch

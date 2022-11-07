@@ -53,9 +53,13 @@ public class Validator : IValidator
             }
             prevCharacter = ch;
         }
-        if (prevCharacter?.Type == CharacterType.Operator)
+        if (IsEndsWithOperation(prevCharacter))
             return MathErrorMessager.EndingWithOperation;
         
         return unclosedBrackets > 0 ? MathErrorMessager.IncorrectBracketsNumber : string.Empty;
     }
+
+    [ExcludeFromCodeCoverage]
+    private static bool IsEndsWithOperation(Character? prevCharacter) =>
+        prevCharacter?.Type == CharacterType.Operator;
 }
