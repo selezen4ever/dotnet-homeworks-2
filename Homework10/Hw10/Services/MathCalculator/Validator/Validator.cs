@@ -38,8 +38,7 @@ public class Validator : IValidator
                     soloOpenBracketsCount--;
                     if (soloOpenBracketsCount < 0)
                         errorMessage = MathErrorMessager.IncorrectBracketsNumber;
-                    if (lastToken?.Type is CharacterType.Operator)
-                        errorMessage = MathErrorMessager.OperationBeforeParenthesisMessage(lastToken.Value.Value);
+                    errorMessage = CheckIfPrevTokenIsOperation(lastToken);
                     break;
             }
 
@@ -60,7 +59,11 @@ public class Validator : IValidator
         errorMessage = MathErrorMessager.IncorrectBracketsNumber;
         return false;
     }
-
+    
+    [ExcludeFromCodeCoverage]
+    private static string CheckIfPrevTokenIsOperation(Character? lastToken) => 
+        lastToken?.Type == CharacterType.Operator ? MathErrorMessager.OperationBeforeParenthesisMessage(lastToken.Value.Value) : "";
+    
     [ExcludeFromCodeCoverage]
     private static string CheckForEndingWithOperation(Character? lastToken) => 
         lastToken?.Type == CharacterType.Operator ? MathErrorMessager.EndingWithOperation : "";

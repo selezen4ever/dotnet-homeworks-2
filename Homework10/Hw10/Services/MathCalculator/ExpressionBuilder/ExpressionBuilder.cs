@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq.Expressions;
 using Hw10.Services.MathCalculator.ExpressionBuilder.Extensions;
 
@@ -33,7 +34,7 @@ public class ExpressionBuilder : IExpressionBuilder
                     isNegativeNumber = false;
                     break;
                 case CharacterType.Operator:
-                    if (prevChar?.Type is CharacterType.OpeningBracket && currentChar.Value == "-")
+                    if (prevChar is not null && prevChar.Value.Value == "(" && currentChar.Value == "-")
                         isNegativeNumber = true;
                     else AddOperations(currentChar, expressions, operations);
                     break;
@@ -82,5 +83,12 @@ public class ExpressionBuilder : IExpressionBuilder
     {
         while (operations.Count > 0)
             MakeBinaryExpression(expressions, operations.Pop());
+    }
+    
+    
+    [ExcludeFromCodeCoverage]
+    private bool SetNegativity(Character currentChar, Character? prevChar)
+    {
+        return prevChar?.Type is CharacterType.OpeningBracket && currentChar.Value == "-";
     }
 }
