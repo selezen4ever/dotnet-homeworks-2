@@ -2,5 +2,5 @@
 
 public interface IValidator
 {
-    public void TryValidateExpression(List<Character> tokens);
+    public void TryValidateExpression(List<Character> characters);
 }

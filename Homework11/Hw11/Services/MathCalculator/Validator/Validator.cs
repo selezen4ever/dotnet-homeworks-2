@@ -6,28 +6,32 @@ namespace Hw11.Services.MathCalculator.Validator;
 
 public class Validator : IValidator
 {
-    public void TryValidateExpression(List<Character> tokens)
+    public void TryValidateExpression(List<Character> characters)
     {
-        if (!tokens.Any())
+        if (!characters.Any())
             throw new InvalidSyntaxException(MathErrorMessager.EmptyString);
         
         
         var soloOpenBracketsCount = 0;
-        Character? lastToken = null;
+        Character? prevChar = null;
         
-        foreach (var currentToken in tokens)
+        foreach (var currentChar in characters)
         {
-            switch (currentToken.Type)
+            switch (currentChar.Type)
             {
                 case CharacterType.Number:
                     break;
                 case CharacterType.Operator:
-                    if (lastToken is null)
-                        throw new InvalidSyntaxException(MathErrorMessager.StartingWithOperation);
-                    if (lastToken is { Type: CharacterType.Operator })
-                        throw new InvalidSyntaxException(MathErrorMessager.TwoOperationInRowMessage(lastToken.Value.Value, currentToken.Value));
-                    if (lastToken is { Value: "(" } && currentToken.Value != "-")
-                        throw new InvalidSyntaxException(MathErrorMessager.InvalidOperatorAfterParenthesisMessage(currentToken.Value));
+                    switch (prevChar)
+                    {
+                        case null:
+                            throw new InvalidSyntaxException(MathErrorMessager.StartingWithOperation);
+                        case { Type: CharacterType.Operator }:
+                            throw new InvalidSyntaxException(MathErrorMessager.TwoOperationInRowMessage(prevChar.Value.Value, currentChar.Value));
+                        case { Value: "(" } when currentChar.Value != "-":
+                            throw new InvalidSyntaxException(MathErrorMessager.InvalidOperatorAfterParenthesisMessage(currentChar.Value));
+                    }
+
                     break;
                 case CharacterType.OpeningBracket:
                     soloOpenBracketsCount++;
@@ -36,32 +40,31 @@ public class Validator : IValidator
                     soloOpenBracketsCount--;
                     if (soloOpenBracketsCount < 0)
                         throw new InvalidSyntaxException(MathErrorMessager.IncorrectBracketsNumber);
-                    CheckIfPrevTokenIsOperation(lastToken);
+                    CheckIfPrevTokenIsOperation(prevChar);
                     break;
             }
-            lastToken = currentToken;
+            prevChar = currentChar;
         }
         
-        CheckForEndingWithOperation(lastToken);
+        CheckForEndingWithOperation(prevChar);
 
         if (soloOpenBracketsCount != 0)
         {
             throw new InvalidSyntaxException(MathErrorMessager.IncorrectBracketsNumber);
         }
     }
-
     [ExcludeFromCodeCoverage]
-    private static void CheckIfPrevTokenIsOperation(Character? lastToken)
+    private static void CheckIfPrevTokenIsOperation(Character? prevChar)
     {
-        if (lastToken?.Type == CharacterType.Operator)
+        if (prevChar?.Type == CharacterType.Operator)
             throw new InvalidSyntaxException(
-                MathErrorMessager.OperationBeforeParenthesisMessage(lastToken.Value.Value));
+                MathErrorMessager.OperationBeforeParenthesisMessage(prevChar.Value.Value));
     }
 
     [ExcludeFromCodeCoverage]
-    private static void CheckForEndingWithOperation(Character? lastToken)
+    private static void CheckForEndingWithOperation(Character? prevChar)
     {
-        if (lastToken?.Type == CharacterType.Operator)
+        if (prevChar?.Type == CharacterType.Operator)
         {
             throw new InvalidSyntaxException(MathErrorMessager.EndingWithOperation);
         }
