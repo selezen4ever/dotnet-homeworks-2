@@ -4,18 +4,18 @@ using System.Net.Http;
 using System.Text;
 using JetBrains.dotMemoryUnit;
 using Microsoft.AspNetCore.Mvc.Testing;
+using WebServer;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Hw13.Tests;
 
-public class MemoryTest : IClassFixture<WebApplicationFactory<MemoryTest>>
-    // TODO: replace MemoryTest with the right generic argument
+public class MemoryTest : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
     private readonly ITestOutputHelper _output;
 
-    public MemoryTest(WebApplicationFactory<MemoryTest> factory, ITestOutputHelper output)
+    public MemoryTest(WebApplicationFactory<Program> factory, ITestOutputHelper output)
     {
         _output = output;
         DotMemoryUnitTestOutput.SetOutputMethod(_output.WriteLine);
@@ -31,7 +31,6 @@ public class MemoryTest : IClassFixture<WebApplicationFactory<MemoryTest>>
         var list = testDataGenerator.GetValue();
         long size = 0;
         for (var i = 0; i < 100; i++)
-        {
             foreach (var element in list)
             {
                 var postRequest = new HttpRequestMessage(HttpMethod.Post, "/Calculator/CalculateMathExpression");
@@ -41,7 +40,6 @@ public class MemoryTest : IClassFixture<WebApplicationFactory<MemoryTest>>
 
                 size += Encoding.UTF8.GetBytes(element).Length;
             }
-        }
 
         dotMemory.Check(memory =>
         {
@@ -49,8 +47,10 @@ public class MemoryTest : IClassFixture<WebApplicationFactory<MemoryTest>>
             _output.WriteLine(size.ToString());
             Assert.True(memory.GetTrafficFrom(memoryBefore).CollectedMemory.SizeInBytes >= size);
         });
-    }
+    }   
 }
+
+
 
 public class TestDataGenerator
 {
@@ -83,18 +83,19 @@ public class TestDataGenerator
         "@*(@+@)+@"
     };
 
-    private int GenerateRandomValue(Random random) => random.Next(1, 10000);
+    private int GenerateRandomValue(Random random)
+    {
+        return random.Next(1, 10000);
+    }
 
     private string FillElement(Random random, string element)
     {
         var strBuilder = new StringBuilder();
         foreach (var ch in element)
-        {
             if (ch.Equals('@'))
                 strBuilder.Append(GenerateRandomValue(random));
             else
                 strBuilder.Append(ch);
-        }
 
         return strBuilder.ToString();
     }
@@ -103,6 +104,6 @@ public class TestDataGenerator
     {
         var random = new Random();
         foreach (var element in _list)
-            yield return FillElement(random, element);
+                yield return FillElement(random, element);
     }
 }
