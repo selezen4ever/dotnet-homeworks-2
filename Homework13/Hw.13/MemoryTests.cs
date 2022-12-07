@@ -20,9 +20,9 @@ public class MemoryTests
     [GlobalSetup]
     public void Setup()
     {
-        _benchmarkMethod = new MethodsForBenchmark();
+        _benchmarkMethod = new MethodsForBenchmarkExtension();
         _testString = "string";
-        _reflectionMethod = typeof(MemoryTests).GetMethod("Reflection");			
+        _reflectionMethod = typeof(MethodsForBenchmarkExtension).GetMethod(nameof(MethodsForBenchmarkExtension.Reflection));			
     }
 
     [Benchmark(Description = "Simple")]
@@ -50,7 +50,7 @@ public class MemoryTests
     }
         
     [Benchmark(Description = "Dynamic")]
-    public void TestDynamicMethod()
+    public void TestDynamicMethod() 
     {
         _benchmarkMethod.Dynamic(_testString);
     }
